@@ -16,8 +16,12 @@
     <h5 class="my-0 me-md-auto">Skystore</h5>
 
     <nav class="mt-2 mt-md-0">
-        <a class="p-2 btn btn-outline-primary" href="/">Каталог</a>
-        <a class="p-2 btn btn-outline-primary" href="/contacts/">Контакты</a>
+        <a class="p-2 btn btn-outline-primary" href="/">
+            Каталог
+        </a>
+        <a class="p-2 btn btn-outline-primary" href="/contacts/">
+            Контакты
+        </a>
     </nav>
 </header>
 
@@ -27,29 +31,40 @@
 
 <div class="container">
     <div class="row text-start">
+
+        <!-- Контактные данные из базы -->
         <div class="col-12 col-lg-8">
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
-                    <table class="table table-striped">
-                        <tbody>
-                        <tr>
-                            <th scope="row" class="w-25">Страна</th>
-                            <td>USA</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" class="w-25">ИНН</th>
-                            <td>91-1144442</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" class="w-25">Адрес</th>
-                            <td>Redmond, WA, 98052-6399</td>
-                        </tr>
-                        </tbody>
-                    </table>
+
+                    {% if contact %}
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <th scope="row" class="w-25">Страна</th>
+                                <td>{{ contact.country }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="w-25">ИНН</th>
+                                <td>{{ contact.tax_number }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="w-25">Адрес</th>
+                                <td>{{ contact.address }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p class="mb-0">
+                            Контактная информация пока не добавлена.
+                        </p>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
 
+        <!-- Форма обратной связи -->
         <div class="col-12 col-lg-4">
             <div class="card mb-4 shadow-sm">
                 <div class="card-header">
@@ -57,6 +72,7 @@
                 </div>
 
                 <div class="card-body">
+
                     {% if result %}
                         <div class="alert alert-info" role="alert">
                             {{ result }}
@@ -115,33 +131,50 @@
                             Отправить
                         </button>
                     </form>
+
                 </div>
             </div>
         </div>
+
     </div>
 
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
         <div class="row">
+
             <div class="col-12 col-md">
                 SkyStore
-                <small class="d-block mb-3 text-muted">&copy; 2023</small>
+                <small class="d-block mb-3 text-muted">
+                    &copy; 2023
+                </small>
             </div>
 
             <div class="col-6 col-md">
                 <h5>Категории</h5>
                 <ul class="list-unstyled">
-                    <li><a class="text-muted" href="#">Рассылки</a></li>
-                    <li><a class="text-muted" href="#">Телеграм-боты</a></li>
-                    <li><a class="text-muted" href="#">Полезные утилиты</a></li>
-                    <li><a class="text-muted" href="#">Веб-приложения</a></li>
-                    <li><a class="text-muted" href="#">Микросервисы</a></li>
+                    <li>
+                        <a class="text-muted" href="#">Рассылки</a>
+                    </li>
+                    <li>
+                        <a class="text-muted" href="#">Телеграм-боты</a>
+                    </li>
+                    <li>
+                        <a class="text-muted" href="#">Полезные утилиты</a>
+                    </li>
+                    <li>
+                        <a class="text-muted" href="#">Веб-приложения</a>
+                    </li>
+                    <li>
+                        <a class="text-muted" href="#">Микросервисы</a>
+                    </li>
                 </ul>
             </div>
 
             <div class="col-6 col-md">
                 <h5>Дополнительно</h5>
                 <ul class="list-unstyled">
-                    <li><a class="text-muted" href="#">Мы пишем</a></li>
+                    <li>
+                        <a class="text-muted" href="#">Мы пишем</a>
+                    </li>
                 </ul>
             </div>
 
@@ -149,10 +182,13 @@
                 <h5>О нас</h5>
                 <ul class="list-unstyled">
                     <li>
-                        <a class="text-muted" href="/contacts/">Контакты</a>
+                        <a class="text-muted" href="/contacts/">
+                            Контакты
+                        </a>
                     </li>
                 </ul>
             </div>
+
         </div>
     </footer>
 </div>
