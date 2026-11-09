@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} — Skystore{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+    <a class="btn btn-outline-secondary" href="{% url 'home' %}">
+        Вернуться в каталог
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-md-6">
+
+        {% if product.image %}
+            <img
+                src="{{ product.image.url }}"
+                class="img-fluid rounded border w-100"
+                alt="{{ product.name }}"
+                style="max-height: 450px; object-fit: contain;"
+            >
+        {% else %}
+            <div class="bg-light border rounded p-5 text-center text-muted">
+                Изображение отсутствует
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div class="col-12 col-md-6">
+        <h1>{{ product.name }}</h1>
+
+        <p class="text-muted">
+            Категория: {{ product.category.name }}
+        </p>
+
+        <p class="fs-3 fw-semibold">
+            {{ product.price }} ₽
+        </p>
+
+        <h2 class="h4">Описание</h2>
+
+        <div class="mb-4">
+            {{ product.description|linebreaks }}
+        </div>
+
+        <dl class="row">
+            <dt class="col-sm-5">Номер товара</dt>
+            <dd class="col-sm-7">{{ product.pk }}</dd>
+
+            <dt class="col-sm-5">Дата создания</dt>
+            <dd class="col-sm-7">
+                {{ product.created_at|date:"d.m.Y H:i" }}
+            </dd>
+
+            <dt class="col-sm-5">Последнее изменение</dt>
+            <dd class="col-sm-7">
+                {{ product.updated_at|date:"d.m.Y H:i" }}
+            </dd>
+        </dl>
+    </div>
+</div>
+
+{% endblock %}
