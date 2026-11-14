@@ -1,58 +1,51 @@
-from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import render
+from django.urls import reverse
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    ListView,
+    TemplateView,
+)
 
 from catalog.forms import ProductForm
 from catalog.models import Contact, Product
 
 
-def home(request):
-    products = Product.objects.all()
-
-    # Стабильный порядок товаров для постраничного вывода
-    products = products.order_by("id")
-
-    paginator = Paginator(products, 6)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    return render(
-        request,
-        "home.html",
-        {"page_obj": page_obj},
-    )
+class ProductListView(ListView):
+    model = Product
+    template_name = "home.html"
+    context_object_name = "products"
+    paginate_by = 6
+    ordering = "id"
 
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-
-    return render(
-        request,
-        "product_detail.html",
-        {"product": product},
-    )
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "product_detail.html"
+    context_object_name = "product"
 
 
-def product_create(request):
-    if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES)
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "product_form.html"
 
-        if form.is_valid():
-            product = form.save()
-            return redirect("product_detail", pk=product.pk)
-    else:
-        form = ProductForm()
-
-    return render(
-        request,
-        "product_form.html",
-        {"form": form},
-    )
+    def get_success_url(self):
+        return reverse(
+            "product_detail",
+            kwargs={"pk": self.object.pk},
+        )
 
 
-def contacts(request):
-    result = ""
+class ContactView(TemplateView):
+    template_name = "contacts.html"
 
-    if request.method == "POST":
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["contact"] = Contact.objects.order_by("id").first()
+        return context
+
+    def post(self, request, *args, **kwargs):
         name = request.POST.get("name", "").strip()
         phone = request.POST.get("phone", "").strip()
         message = request.POST.get("message", "").strip()
@@ -62,13 +55,11 @@ def contacts(request):
         else:
             result = "Заполните все поля формы."
 
-    contact = Contact.objects.order_by("id").first()
+        context = self.get_context_data()
+        context["result"] = result
 
-    return render(
-        request,
-        "contacts.html",
-        {
-            "result": result,
-            "contact": contact,
-        },
-    )
+        return render(
+            request,
+            self.template_name,
+            context,
+        )

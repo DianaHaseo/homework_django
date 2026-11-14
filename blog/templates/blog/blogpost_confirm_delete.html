@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Удаление статьи — Skystore{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-6">
+
+        <h1 class="mb-4">Удаление статьи</h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <p>
+                    Вы действительно хотите удалить статью
+                    «{{ post.title }}»?
+                </p>
+
+                <p class="text-muted">
+                    Восстановить запись через сайт после удаления нельзя.
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <button type="submit" class="btn btn-danger">
+                        Да, удалить
+                    </button>
+
+                    <a
+                        class="btn btn-outline-secondary"
+                        href="{% url 'blog:post_detail' post.pk %}"
+                    >
+                        Отмена
+                    </a>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
