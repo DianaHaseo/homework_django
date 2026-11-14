@@ -1,0 +1,33 @@
+<header class="bg-white border-bottom shadow-sm">
+    <div class="container d-flex flex-column flex-md-row align-items-center py-3">
+        <a
+            class="fs-4 text-decoration-none text-dark me-md-auto"
+            href="{% url 'home' %}"
+        >
+            Skystore
+        </a>
+
+        <nav class="mt-3 mt-md-0">
+            <a
+                class="btn btn-outline-primary me-1"
+                href="{% url 'home' %}"
+            >
+                Каталог
+            </a>
+
+            <a
+                class="btn btn-outline-primary me-1"
+                href="{% url 'contacts' %}"
+            >
+                Контакты
+            </a>
+
+            <a
+                class="btn btn-primary"
+                href="{% url 'product_create' %}"
+            >
+                Добавить товар
+            </a>
+        </nav>
+    </div>
+</header>
