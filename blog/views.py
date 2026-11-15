@@ -1,5 +1,5 @@
 from django.db.models import F
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -44,14 +44,24 @@ class BlogPostCreateView(CreateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blogpost_form.html"
-    success_url = "/blogs/{id}/"
+
+    def get_success_url(self):
+        return reverse(
+            "blog:post_detail",
+            kwargs={"pk": self.object.pk},
+        )
 
 
 class BlogPostUpdateView(UpdateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "blog/blogpost_form.html"
-    success_url = "/blogs/{id}/"
+
+    def get_success_url(self):
+        return reverse(
+            "blog:post_detail",
+            kwargs={"pk": self.object.pk},
+        )
 
 
 class BlogPostDeleteView(DeleteView):

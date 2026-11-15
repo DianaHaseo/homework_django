@@ -1,71 +1,65 @@
-from django.db.models import F
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import (
     CreateView,
-    DeleteView,
     DetailView,
     ListView,
-    UpdateView,
+    TemplateView,
 )
 
-from blog.forms import BlogPostForm
-from blog.models import BlogPost
+from catalog.forms import ProductForm
+from catalog.models import Contact, Product
 
 
-class BlogPostListView(ListView):
-    model = BlogPost
-    template_name = "blog/blogpost_list.html"
-    context_object_name = "posts"
-
-    def get_queryset(self):
-        return super().get_queryset().filter(
-            is_published=True,
-        )
+class ProductListView(ListView):
+    model = Product
+    template_name = "home.html"
+    context_object_name = "products"
+    paginate_by = 6
+    ordering = "id"
 
 
-class BlogPostDetailView(DetailView):
-    model = BlogPost
-    template_name = "blog/blogpost_detail.html"
-    context_object_name = "post"
-
-    def get_object(self, queryset=None):
-        post = super().get_object(queryset)
-
-        BlogPost.objects.filter(pk=post.pk).update(
-            views_count=F("views_count") + 1,
-        )
-
-        post.refresh_from_db(fields=["views_count"])
-
-        return post
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "product_detail.html"
+    context_object_name = "product"
 
 
-class BlogPostCreateView(CreateView):
-    model = BlogPost
-    form_class = BlogPostForm
-    template_name = "blog/blogpost_form.html"
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "product_form.html"
 
     def get_success_url(self):
         return reverse(
-            "blog:post_detail",
+            "product_detail",
             kwargs={"pk": self.object.pk},
         )
 
 
-class BlogPostUpdateView(UpdateView):
-    model = BlogPost
-    form_class = BlogPostForm
-    template_name = "blog/blogpost_form.html"
+class ContactView(TemplateView):
+    template_name = "contacts.html"
 
-    def get_success_url(self):
-        return reverse(
-            "blog:post_detail",
-            kwargs={"pk": self.object.pk},
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["contact"] = Contact.objects.order_by("id").first()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get("name", "").strip()
+        phone = request.POST.get("phone", "").strip()
+        message = request.POST.get("message", "").strip()
+
+        if name and phone and message:
+            result = "Спасибо! Ваше обращение успешно принято."
+        else:
+            result = "Заполните все поля формы."
+
+        context = self.get_context_data()
+        context["result"] = result
+
+        return render(
+            request,
+            self.template_name,
+            context,
         )
-
-
-class BlogPostDeleteView(DeleteView):
-    model = BlogPost
-    template_name = "blog/blogpost_confirm_delete.html"
-    context_object_name = "post"
-    success_url = reverse_lazy("blog:post_list")
