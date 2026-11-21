@@ -1,6 +1,5 @@
 <header class="bg-white border-bottom shadow-sm">
     <div class="container d-flex flex-column flex-md-row align-items-center py-3">
-
         <a
             class="fs-4 text-decoration-none text-dark me-md-auto"
             href="{% url 'home' %}"
@@ -8,23 +7,16 @@
             Skystore
         </a>
 
-        <nav class="d-flex flex-wrap justify-content-center gap-2 mt-3 mt-md-0">
+        <nav class="mt-3 mt-md-0">
             <a
-                class="btn btn-outline-primary"
+                class="btn btn-outline-primary me-1"
                 href="{% url 'home' %}"
             >
                 Каталог
             </a>
 
             <a
-                class="btn btn-outline-primary"
-                href="{% url 'blog:post_list' %}"
-            >
-                Блог
-            </a>
-
-            <a
-                class="btn btn-outline-primary"
+                class="btn btn-outline-primary me-1"
                 href="{% url 'contacts' %}"
             >
                 Контакты
@@ -37,6 +29,5 @@
                 Добавить товар
             </a>
         </nav>
-
     </div>
 </header>
