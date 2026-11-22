@@ -1,110 +1,85 @@
 {% extends "base.html" %}
 
-{% block title %}Skystore — Каталог{% endblock %}
-
 {% block content %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Каталог продуктов</h1>
 
-<div class="text-center mb-4">
-    <h1>Каталог товаров</h1>
-    <p class="lead">
-        Плагины, программы и полезные инструменты для ваших проектов.
-    </p>
-</div>
-
-<div class="row g-4">
-    {% for product in page_obj %}
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-
-                {% if product.image %}
-                    <img
-                        src="{{ product.image.url }}"
-                        class="card-img-top"
-                        alt="{{ product.name }}"
-                        style="height: 220px; object-fit: contain;"
-                    >
-                {% else %}
-                    <div
-                        class="d-flex align-items-center justify-content-center bg-light text-muted"
-                        style="height: 220px;"
-                    >
-                        Изображение отсутствует
-                    </div>
-                {% endif %}
-
-                <div class="card-body d-flex flex-column">
-                    <h2 class="h5 card-title">
-                        {{ product.name }}
-                    </h2>
-
-                    <p class="card-text">
-                        {{ product.description|truncatechars:100 }}
-                    </p>
-
-                    <p class="fw-semibold mt-auto">
-                        {{ product.price }} ₽
-                    </p>
-
-                    <a
-                        class="btn btn-outline-primary"
-                        href="{% url 'product_detail' product.pk %}"
-                    >
-                        Подробнее
-                    </a>
-                </div>
-            </div>
-        </div>
-    {% empty %}
-        <div class="col-12">
-            <div class="alert alert-info">
-                В каталоге пока нет товаров.
-            </div>
-
-            <a
-                class="btn btn-primary"
-                href="{% url 'product_create' %}"
-            >
-                Добавить первый товар
+            <a href="{% url 'product_create' %}" class="btn btn-primary">
+                Добавить продукт
             </a>
         </div>
-    {% endfor %}
-</div>
 
-{% if page_obj.has_other_pages %}
-    <nav class="mt-4" aria-label="Страницы каталога">
-        <ul class="pagination justify-content-center">
+        {% if products %}
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            {% if product.image %}
+                                <img
+                                    src="{{ product.image.url }}"
+                                    class="card-img-top"
+                                    alt="{{ product.name }}"
+                                >
+                            {% endif %}
 
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a
-                        class="page-link"
-                        href="?page={{ page_obj.previous_page_number }}"
-                    >
-                        Назад
-                    </a>
-                </li>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ product.name }}
+                                </h5>
+
+                                <p class="card-text">
+                                    {{ product.description|truncatechars:100 }}
+                                </p>
+
+                                <p class="card-text">
+                                    <strong>Цена:</strong>
+                                    {{ product.price }} руб.
+                                </p>
+
+                                <a
+                                    href="{% url 'product_detail' product.pk %}"
+                                    class="btn btn-outline-primary"
+                                >
+                                    Подробнее
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if is_paginated %}
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                    Назад
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <span class="page-link">
+                                {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                            </span>
+                        </li>
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                    Далее
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
             {% endif %}
-
-            <li class="page-item disabled">
-                <span class="page-link">
-                    Страница {{ page_obj.number }}
-                    из {{ page_obj.paginator.num_pages }}
-                </span>
-            </li>
-
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a
-                        class="page-link"
-                        href="?page={{ page_obj.next_page_number }}"
-                    >
-                        Вперёд
-                    </a>
-                </li>
-            {% endif %}
-
-        </ul>
-    </nav>
-{% endif %}
-
+        {% else %}
+            <div class="alert alert-info">
+                Продукты пока не добавлены.
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

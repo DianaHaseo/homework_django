@@ -1,65 +1,57 @@
 {% extends "base.html" %}
 
-{% block title %}{{ product.name }} — Skystore{% endblock %}
-
 {% block content %}
-
-<div class="mb-4">
-    <a class="btn btn-outline-secondary" href="{% url 'home' %}">
-        Вернуться в каталог
-    </a>
-</div>
-
-<div class="row g-4">
-    <div class="col-12 col-md-6">
+    <div class="container">
+        <h1 class="mb-4">{{ product.name }}</h1>
 
         {% if product.image %}
             <img
                 src="{{ product.image.url }}"
-                class="img-fluid rounded border w-100"
+                class="img-fluid rounded mb-4"
                 alt="{{ product.name }}"
-                style="max-height: 450px; object-fit: contain;"
             >
-        {% else %}
-            <div class="bg-light border rounded p-5 text-center text-muted">
-                Изображение отсутствует
-            </div>
         {% endif %}
 
-    </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Описание:</strong>
+                    {{ product.description }}
+                </p>
 
-    <div class="col-12 col-md-6">
-        <h1>{{ product.name }}</h1>
+                <p class="card-text">
+                    <strong>Цена:</strong>
+                    {{ product.price }} руб.
+                </p>
 
-        <p class="text-muted">
-            Категория: {{ product.category.name }}
-        </p>
+                <p class="card-text">
+                    <strong>Категория:</strong>
+                    {{ product.category }}
+                </p>
 
-        <p class="fs-3 fw-semibold">
-            {{ product.price }} ₽
-        </p>
-
-        <h2 class="h4">Описание</h2>
-
-        <div class="mb-4">
-            {{ product.description|linebreaks }}
+                <p class="card-text">
+                    <strong>Статус публикации:</strong>
+                    {% if product.is_published %}
+                        Опубликован
+                    {% else %}
+                        Не опубликован
+                    {% endif %}
+                </p>
+            </div>
         </div>
 
-        <dl class="row">
-            <dt class="col-sm-5">Номер товара</dt>
-            <dd class="col-sm-7">{{ product.pk }}</dd>
+        <div class="mb-4">
+            <a href="{% url 'product_update' product.pk %}" class="btn btn-warning">
+                Редактировать
+            </a>
 
-            <dt class="col-sm-5">Дата создания</dt>
-            <dd class="col-sm-7">
-                {{ product.created_at|date:"d.m.Y H:i" }}
-            </dd>
+            <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger">
+                Удалить
+            </a>
 
-            <dt class="col-sm-5">Последнее изменение</dt>
-            <dd class="col-sm-7">
-                {{ product.updated_at|date:"d.m.Y H:i" }}
-            </dd>
-        </dl>
+            <a href="{% url 'home' %}" class="btn btn-secondary">
+                Назад к списку
+            </a>
+        </div>
     </div>
-</div>
-
 {% endblock %}
