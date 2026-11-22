@@ -1,4 +1,5 @@
 from django import forms
+from django.core.files.uploadedfile import UploadedFile
 
 from catalog.models import Product
 
@@ -73,6 +74,9 @@ class ProductForm(forms.ModelForm):
         image = self.cleaned_data.get("image")
 
         if not image:
+            return image
+
+        if not isinstance(image, UploadedFile):
             return image
 
         if image.size > MAX_IMAGE_SIZE:
